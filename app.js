@@ -62,34 +62,41 @@ app.get("/content/search", async (req, res) => {
 });
 
 app.post("/content", async (req, res) => {
-  const { content, statusId, typeId } = req.body;
+  try {
+    const { content, statusId, typeId } = req.body;
 
-  if (!content || !statusId || !typeId) {
-    return res.status(400).json({ error: "모든 필수 입력 값을 입력해주세요!" });
+    if (!content || !statusId || !typeId) {
+      return res
+        .status(400)
+        .json({ error: "모든 필수 입력 값을 입력해주세요!" });
+    }
+
+    const newItem = await sequelize.transaction(async () => {
+      await Item.create({
+        content,
+        statusId: parseInt(statusId),
+        typeId: parseInt(typeId),
+      });
+
+      return await Item.findAll({
+        include: [
+          {
+            model: Status,
+            attributes: ["name"],
+          },
+          {
+            model: Type,
+            attributes: ["name"],
+          },
+        ],
+      });
+    });
+
+    return res.status(200).json({ success: true, data: newItem });
+  } catch (error) {
+    console.error("에러 발생:", error);
+    return res.status(500).json({ error: "서버 오류 발생!" });
   }
-
-  const newItem = await sequelize.transaction(async () => {
-    await Item.create({
-      content,
-      statusId: parseInt(statusId),
-      typeId: parseInt(typeId),
-    });
-
-    return await Item.findAll({
-      include: [
-        {
-          model: Status,
-          attributes: ["name"],
-        },
-        {
-          model: Type,
-          attributes: ["name"],
-        },
-      ],
-    });
-  });
-
-  return res.status(200).json({ success: true, data: newItem });
 });
 
 app.put("/content", async (req, res) => {
