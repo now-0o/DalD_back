@@ -70,7 +70,7 @@ app.post("/content", async (req, res) => {
         .status(400)
         .json({ error: "모든 필수 입력 값을 입력해주세요!" });
     }
-    console.log(content, statusId, typeId);
+
     const newItem = await sequelize.transaction(async () => {
       await Item.create({
         content,
