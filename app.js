@@ -28,6 +28,7 @@ app.get("/content", async (req, res) => {
         attributes: ["name"],
       },
     ],
+    order: [[Status, "id", "ASC"]],
   });
 
   return res.status(200).json({ success: true, data: getItem });
@@ -56,6 +57,7 @@ app.get("/content/search", async (req, res) => {
         attributes: ["name"],
       },
     ],
+    order: [[Status, "id", "ASC"]],
   });
 
   return res.status(200).json({ success: true, data: getItem });
@@ -89,6 +91,7 @@ app.post("/content", async (req, res) => {
             attributes: ["name"],
           },
         ],
+        order: [[Status, "id", "ASC"]],
       });
     });
 
@@ -145,6 +148,7 @@ app.put("/content", async (req, res) => {
             attributes: ["name"],
           },
         ],
+        order: [[Status, "id", "ASC"]],
       });
     } else {
       console.log("수정 실패.");
@@ -180,6 +184,7 @@ app.delete("/content", async (req, res) => {
             attributes: ["name"],
           },
         ],
+        order: [[Status, "id", "ASC"]],
       });
     } catch (error) {
       console.error("삭제실패 :", error);
