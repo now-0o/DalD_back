@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const { Item, Status, Type, History } = require("./models");
+const { Item, Status, Type, History, Color } = require("./models");
 const { Op } = require("sequelize");
 const cors = require("cors");
 const app = express();
@@ -95,7 +95,7 @@ app.post("/content", async (req, res) => {
       });
     });
 
-    return res.status(200).json({ success: true, data: newItem });
+    return res.status(201).json({ success: true, data: newItem });
   } catch (error) {
     console.error("에러 발생:", error);
     return res.status(500).json({ error: "서버 오류 발생!" });
@@ -195,6 +195,38 @@ app.delete("/content", async (req, res) => {
   });
 
   return res.status(200).json({ success: true, data: deleteItem });
+});
+
+app.get("/color", async (req, res) => {
+  const getColor = await Color.findOne({
+    order: [["id", "DESC"]],
+  });
+
+  return res.status(200).json({ success: true, data: getColor });
+});
+
+app.post("/color", async (req, res) => {
+  try {
+    const { red, green, blue, alpha } = req.body;
+
+    if (!red || !green || !blue || !alpha) {
+      return res.status(400).json({ error: "잘못된 색상값 입니다!" });
+    }
+
+    const newItem = await sequelize.transaction(async () => {
+      await Color.create({
+        red,
+        green,
+        blue,
+        alpha,
+      });
+    });
+
+    return res.status(201).json({ success: true });
+  } catch (error) {
+    console.error("에러 발생:", error);
+    return res.status(500).json({ error: "서버 오류 발생!" });
+  }
 });
 
 app.listen(port, () => {

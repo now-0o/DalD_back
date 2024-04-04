@@ -2,6 +2,7 @@ const Item = require("./Item");
 const Type = require("./Type");
 const Status = require("./Status");
 const History = require("./History");
+const Color = require("./Color");
 
 Type.hasMany(Item);
 Item.belongsTo(Type);
@@ -23,4 +24,5 @@ module.exports = {
   Status,
   Type,
   History,
+  Color,
 };
