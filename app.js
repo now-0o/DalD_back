@@ -208,7 +208,7 @@ app.get("/color", async (req, res) => {
 app.post("/color", async (req, res) => {
   try {
     const { red, green, blue, alpha } = req.body;
-    console.log(red, green, blue, alpha);
+
     if (!red || !green || !blue || !alpha) {
       return res.status(400).json({ error: "잘못된 색상값 입니다!" });
     }
